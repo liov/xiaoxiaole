@@ -8,9 +8,9 @@ import {v2,Vec2} from "cc"
 export default class GameModel {
     cells: CellModel[][];
     cellBgs: any;
-    lastPos: any;
+    lastPos: Vec2;
     cellTypeNum: number;
-    cellCreateType: any[];
+    cellCreateType: number[];
     curTime:number;
     changeModels:CellModel[];
     effectsQueue:any[];
@@ -91,6 +91,7 @@ export default class GameModel {
     let colResult = this.checkWithDirection(x, y, [v2(0, -1),v2(0, 1)]);
     let samePoints:Vec2[] = [];
     let newCellStatus = "";
+
     if (rowResult.length >= 5 || colResult.length >= 5) {
       newCellStatus = CELL_STATUS.BIRD;
     }
@@ -170,7 +171,7 @@ export default class GameModel {
   }
   // controller调用的主要入口
   // 点击某个格子
-  selectCell(pos) {
+  selectCell(pos:Vec2): [CellModel[],any[]] {
     this.changeModels = [];// 发生改变的model，将作为返回值，给view播动作
     this.effectsQueue = []; // 动物消失，爆炸等特效
     var lastPos = this.lastPos;
@@ -196,7 +197,7 @@ export default class GameModel {
       curClickCell.moveToAndBack(lastPos);
       lastClickCell.moveToAndBack(pos);
       this.lastPos = v2(-1, -1);
-      return [this.changeModels];
+      return [this.changeModels,[]];
     }
     else {
       this.lastPos = v2(-1, -1);
@@ -209,7 +210,7 @@ export default class GameModel {
     }
   }
   // 消除
-  processCrush(checkPoint) {
+  processCrush(checkPoint:Vec2[]) {
     let cycleCount = 0;
     while (checkPoint.length > 0) {
       let bombModels = [];
@@ -259,7 +260,7 @@ export default class GameModel {
   }
 
   //生成新cell
-  createNewCell(pos, status, type) {
+  createNewCell(pos:Vec2, status:string, type:number) {
     if (status == "") {
       return;
     }
@@ -313,7 +314,7 @@ export default class GameModel {
     return newCheckPoint;
   }
 
-  pushToChangeModels(model) {
+  pushToChangeModels(model:CellModel) {
     if (this.changeModels.indexOf(model) != -1) {
       return;
     }
@@ -355,7 +356,7 @@ export default class GameModel {
     }
   }
   // 随要生成一个类型
-  getRandomCellType() {
+  getRandomCellType():number {
     var index = Math.floor(Math.random() * this.cellTypeNum);
     return this.cellCreateType[index];
   }
@@ -364,7 +365,7 @@ export default class GameModel {
     while (bombModels.length > 0) {
       let newBombModel = [];
       let bombTime = ANITIME.BOMB_DELAY;
-      bombModels.forEach(function (model) {
+      bombModels.forEach(function (model:CellModel) {
         if (model.status == CELL_STATUS.LINE) {
           for (let i = 1; i <= GRID_WIDTH; i++) {
             if (this.cells[model.y][i]) {
@@ -430,10 +431,10 @@ export default class GameModel {
     }
   }
   /**
-   * 
-   * @param {开始播放的时间} playTime 
-   * @param {*cell位置} pos 
-   * @param {*第几次消除，用于播放音效} step 
+   *
+   * @param {开始播放的时间} playTime
+   * @param {*cell位置} pos
+   * @param {*第几次消除，用于播放音效} step
    */
   addCrushEffect(playTime, pos, step) {
     this.effectsQueue.push({

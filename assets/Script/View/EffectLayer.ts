@@ -51,7 +51,6 @@ export class EffectLayer extends Component {
                     const animation  = instantEffect.getComponent(Animation);
                     animation.play(animationName);
                     animation.on(Animation.EventType.FINISHED, function () {
-                        console.log("animationdestroy");
                         instantEffect.destroy();
                     }, this);
 

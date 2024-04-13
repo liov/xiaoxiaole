@@ -2,7 +2,7 @@
  * 注意：已把原脚本注释，由于脚本变动过大，转换的时候可能有遗落，需要自行手动转换
  */
 import { CELL_TYPE, ANITIME, CELL_STATUS, GRID_HEIGHT } from "./ConstValue";
-import {v2} from "cc";
+import {v2,Vec2} from "cc";
 
 export default class CellModel {
     type: number;
@@ -26,7 +26,7 @@ export default class CellModel {
     this.objecCount = Math.floor(Math.random() * 1000);
   }
 
-  init(type) {
+  init(type:number) {
     this.type = type;
   }
 
@@ -37,21 +37,21 @@ export default class CellModel {
   setEmpty() {
     this.type = CELL_TYPE.EMPTY;
   }
-  setXY(x, y) {
+  setXY(x:number, y:number) {
     this.x = x;
     this.y = y;
   }
 
-  setStartXY(x, y) {
+  setStartXY(x:number, y:number) {
     this.startX = x;
     this.startY = y;
   }
 
-  setStatus(status) {
+  setStatus(status:string) {
     this.status = status;
   }
 
-  moveToAndBack(pos) {
+  moveToAndBack(pos:Vec2) {
     var srcPos = v2(this.x, this.y);
     this.cmd.push({
       action: "moveTo",
@@ -67,7 +67,7 @@ export default class CellModel {
     });
   }
 
-  moveTo(pos, playTime) {
+  moveTo(pos:Vec2, playTime:number) {
     var srcPos = v2(this.x, this.y);
     this.cmd.push({
       action: "moveTo",
@@ -79,7 +79,7 @@ export default class CellModel {
     this.y = pos.y;
   }
 
-  toDie(playTime) {
+  toDie(playTime:number) {
     this.cmd.push({
       action: "toDie",
       playTime: playTime,
@@ -96,7 +96,7 @@ export default class CellModel {
     });
   }
 
-  setVisible(playTime, isVisible) {
+  setVisible(playTime:number, isVisible:boolean) {
     this.cmd.push({
       action: "setVisible",
       playTime: playTime,
@@ -105,7 +105,7 @@ export default class CellModel {
     });
   }
 
-  moveToAndDie(pos) {
+  moveToAndDie(pos:Vec2) {
 
   }
 

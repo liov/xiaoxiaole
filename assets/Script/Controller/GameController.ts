@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, AudioSource,find } from 'cc';
+import { _decorator, Component, Node, director,find, Vec2 } from 'cc';
 const { ccclass, property } = _decorator;
 
 import GameModel from "../Model/GameModel";
@@ -12,20 +12,21 @@ export class GameController extends Component {
     gameModel:GameModel;
 
     onLoad () {
-        this.gameModel = new GameModel(); 
-        this.gameModel.init(4); 
-        var gridScript = this.grid.getComponent(GridView); 
-        gridScript.setController(this); 
-        gridScript.initWithCellModels(this.gameModel.getCells()); 
+        console.log("加载GameController");
+        this.gameModel = new GameModel();
+        this.gameModel.init(6);
+        var gridScript = this.grid.getComponent(GridView);
+        gridScript.setController(this);
+        gridScript.initWithCellModels(this.gameModel.getCells());
     }
 
 
-    selectCell (pos: any) {
-         return this.gameModel.selectCell(pos); 
+    selectCell (pos: Vec2) {
+         return this.gameModel.selectCell(pos);
     }
 
     cleanCmd () {
-         this.gameModel.cleanCmd(); 
+         this.gameModel.cleanCmd();
     }
 
 }

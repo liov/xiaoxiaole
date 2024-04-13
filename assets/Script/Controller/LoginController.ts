@@ -1,4 +1,4 @@
-import { _decorator, Component, ProgressBar, Button, AudioClip,loader,assetManager,director,AssetManager  } from 'cc';
+import { _decorator, Component, ProgressBar, Button, AudioClip,resources,Prefab,director,AssetManager  } from 'cc';
 const { ccclass, property } = _decorator;
 const { Task } = AssetManager;
 
@@ -15,30 +15,34 @@ export class LoginController extends Component {
     last:number;
 
     onLoad () {
+      console.log("加载LoginController");
       AudioManager.instance.play(this.worldSceneBGM);
     }
 
     onLogin () {
-        this.last = 0; 
-        this.loadingBar.node.active = true; 
-        this.loginButton.node.active = false; 
-        this.loadingBar.progress = 0; 
-        this.loadingBar.barSprite.fillRange = 0; 
+        this.last = 0;
+        this.loadingBar.node.active = true;
+        this.loginButton.node.active = false;
+        this.loadingBar.progress = 0;
+        this.loadingBar.barSprite.fillRange = 0;
+        console.time("load");
         director.preloadScene("Game",
-        function  (count, amount, item) { 
-          let progress = Number((count / amount).toFixed(2)); 
-          if (progress > this.loadingBar.barSprite.fillRange) { 
-            this.loadingBar.barSprite.fillRange = count / amount; 
-          } 
-        }.bind(this), function () { 
-          this.loadingBar.node.active = false; 
-          this.loginButton.node.active = false; 
-          director.loadScene("Game"); 
-        }.bind(this)); 
+         (count, amount, item)=> {
+          let progress = Number((count / amount).toFixed(2));
+          if (progress > this.loadingBar.barSprite.fillRange) {
+            this.loadingBar.barSprite.fillRange = count / amount;
+          }
+        }, ()=> {
+          this.loadingBar.node.active = false;
+          this.loginButton.node.active = false;
+          director.loadScene("Game");
+        });
     }
 
     onDestroy () {
-      AudioManager.instance.stop(); 
+      console.log("销毁");
+      console.timeEnd("load");
+      AudioManager.instance.stop();
     }
 
 }
